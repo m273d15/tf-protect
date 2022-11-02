@@ -1,0 +1,42 @@
+{
+  "resource_changes": [
+    {
+      "address": "local_file.my_file",
+      "change": {
+        "actions": [
+          "delete"
+        ]
+      },
+      "mode": "managed",
+      "name": "my_file",
+      "type": "local_file"
+    },
+    {
+      "address": "null_resource.test2",
+      "change": {
+        "actions": [
+          "create"
+        ]
+      },
+      "mode": "managed",
+      "name": "test2",
+      "type": "null_resource"
+    }
+  ],
+  "root_module": {
+    "resources": [
+      {
+        "address": "local_file.my_file",
+        "mode": "managed",
+        "type": "local_file",
+        "name": "my_file"
+      },
+      {
+        "address": "null_resource.test2",
+        "mode": "managed",
+        "type": "null_resource",
+        "name": "test2"
+      }
+    ]
+  }
+}

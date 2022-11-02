@@ -1,0 +1,59 @@
+{
+  "resource_changes": [
+    {
+      "address": "local_file.my_file",
+      "change": {
+        "actions": [
+          "delete"
+        ]
+      },
+      "mode": "managed",
+      "name": "my_file",
+      "type": "local_file"
+    },
+    {
+      "address": "local_file.my_file2",
+      "change": {
+        "actions": [
+          "delete"
+        ]
+      },
+      "mode": "managed",
+      "name": "my_file2",
+      "type": "local_file"
+    },
+    {
+      "address": "local_file.other_file",
+      "change": {
+        "actions": [
+          "create"
+        ]
+      },
+      "mode": "managed",
+      "name": "other_file",
+      "type": "local_file"
+    }
+  ],
+  "root_module": {
+    "resources": [
+      {
+        "address": "local_file.my_file",
+        "mode": "managed",
+        "type": "local_file",
+        "name": "my_file"
+      },
+      {
+        "address": "local_file.my_file2",
+        "mode": "managed",
+        "type": "local_file",
+        "name": "my_file2"
+      },
+      {
+        "address": "local_file.other_file",
+        "mode": "managed",
+        "type": "local_file",
+        "name": "other_file"
+      }
+    ]
+  }
+}

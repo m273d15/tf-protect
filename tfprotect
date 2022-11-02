@@ -1,0 +1,65 @@
+#!/bin/bash -ex
+
+function parse_args {
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+    -c | --config)
+      config_path="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    -p | --plan)
+      tfplan="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    --trace)
+      trace_output=0
+      shift # past argument
+      ;;
+    -h | --help)
+      # TODO: Print help
+      shift # past argument
+      ;;
+    -* | --*)
+      echo "Unknown option $1"
+      # TODO: Print help
+      exit 1
+      ;;
+    *)
+      echo "Undefined positional argument $1"
+      # TODO: Print help
+      exit 1
+      ;;
+    esac
+  done
+
+  readonly config_path trace_output tfplan
+}
+
+function validate_args {
+  if [ ! -f "$config_path" ]; then
+    echo "File not found"
+  fi
+}
+
+function run {
+  local -r config="$1"
+  local -r json_plan="$2"
+  local -r script_dir="$3"
+
+  conftest test \
+    -p "$script_dir/policy" \
+    -o table \
+    "$json_plan" \
+    -d "$config" \
+    --trace
+}
+
+# shellcheck disable=SC2155
+readonly script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+
+parse_args
+validate_args
+
+run "./tfprotect.yaml" "./delete_1_ng.json"

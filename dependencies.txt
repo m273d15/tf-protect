@@ -1,1 +1,0 @@
-https://raw.githubusercontent.com/open-policy-agent/library/master/terraform/library.rego

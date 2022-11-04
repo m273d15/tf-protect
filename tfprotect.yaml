@@ -1,5 +1,3 @@
 resource_types:
-  aws_instance:
-    delete: 0
-    create: 0
-    update: 0
+  local_file:
+    delete: 1

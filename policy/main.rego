@@ -6,6 +6,7 @@ import data.terraform.library
 
 validate_action(action, resource_type, resource_config) = {msg |
     print("action", action, "resource_type", resource_type, "config", resource_config)
+	resource_config[action]
 	num_of_action := library.num_of_type_action[action][resource_type]
 	num_of_action_limit := resource_config[action]
 	num_of_action > num_of_action_limit

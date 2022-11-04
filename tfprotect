@@ -1,65 +1,88 @@
-#!/bin/bash -ex
+#!/bin/bash -e
+
+function help {
+  echo "Terraform plan validation
+
+  Usage:
+    tfprotect --config tfprotect.yaml --plan tfplan.json
+
+  Options:
+    -h, --help            Print this message
+    -c, --config string   Config file that specifies protected resources
+    -p, --plan            Terraform plan in json format
+  "
+}
 
 function parse_args {
   while [[ $# -gt 0 ]]; do
     case $1 in
     -c | --config)
       config_path="$2"
-      shift # past argument
-      shift # past value
+      shift
+      shift
       ;;
     -p | --plan)
       tfplan="$2"
-      shift # past argument
-      shift # past value
-      ;;
-    --trace)
-      trace_output=0
-      shift # past argument
+      shift
+      shift
       ;;
     -h | --help)
-      # TODO: Print help
-      shift # past argument
+      help
+      exit 0
       ;;
-    -* | --*)
+    -*)
       echo "Unknown option $1"
-      # TODO: Print help
+      help
       exit 1
       ;;
     *)
       echo "Undefined positional argument $1"
-      # TODO: Print help
+      help
       exit 1
       ;;
     esac
   done
 
-  readonly config_path trace_output tfplan
+  readonly config_path tfplan
+}
+
+function fail_validation {
+  echo "ERROR: $1"
+  help
+  exit 1
 }
 
 function validate_args {
+  if [ -z "$config_path" ]; then
+    fail_validation "Config file (--config) not set"
+  fi
+  if [ -z "$tfplan" ]; then
+    fail_validation "Config file (--config) not set"
+  fi
+
   if [ ! -f "$config_path" ]; then
-    echo "File not found"
+    fail_validation "Config file '$config_path' not found"
+  fi
+  if [ ! -f "$tfplan" ]; then
+    fail_validation "Terraform plan '$tfplan' not found"
   fi
 }
 
 function run {
   local -r config="$1"
   local -r json_plan="$2"
-  local -r script_dir="$3"
+  local -r dir="$3"
 
   conftest test \
-    -p "$script_dir/policy" \
+    -p "$dir/policy" \
     -o table \
     "$json_plan" \
-    -d "$config" \
-    --trace
+    -d "$config"
 }
 
 # shellcheck disable=SC2155
 readonly script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 
-parse_args
+parse_args "$@"
 validate_args
-
-run "./tfprotect.yaml" "./delete_1_ng.json"
+run "$config_path" "$tfplan" "$script_dir"

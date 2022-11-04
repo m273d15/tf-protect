@@ -26,9 +26,23 @@ test_deny_with_delete_above_limit {
 	count(msgs) == 1
 }
 
-test_not_deny_with_delete_above_limit {
+test_not_deny_with_delete_below_limit {
 	msgs := deny with input as plan_2
 		with data.resource_types as {"local_file": {"delete": 2, "create": 2, "update": 0}}
 	print("msgs", msgs)
 	count(msgs) == 0
+}
+
+test_deny_with_create_above_limit {
+	msgs := deny with input as plan_2
+		with data.resource_types as {"local_file": {"delete": 2, "create": 0, "update": 0}}
+	print("msgs", msgs)
+	count(msgs) == 1
+}
+
+test_deny_with_create_and_delete_above_limit {
+	msgs := deny with input as plan_2
+		with data.resource_types as {"local_file": {"delete": 1, "create": 0, "update": 0}}
+	print("msgs", msgs)
+	count(msgs) == 2
 }

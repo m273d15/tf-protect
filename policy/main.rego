@@ -3,9 +3,9 @@ package main
 import data.resource_types
 import data.terraform.library
 
-import future.keywords.in
 
 validate_action(action, resource_type, resource_config) = {msg |
+    print("action", action, "resource_type", resource_type, "config", resource_config)
 	num_of_action := library.num_of_type_action[action][resource_type]
 	num_of_action_limit := resource_config[action]
 	num_of_action > num_of_action_limit
@@ -13,7 +13,10 @@ validate_action(action, resource_type, resource_config) = {msg |
 }
 
 find_protected_resources_with_violations(tfprotect_types_config) = {msg |
-	some resource_type in tfprotect_types_config
+	print("config", tfprotect_types_config)
+	some resource_type
+	tfprotect_types_config[resource_type]
+	print("resource_type", resource_type)
 	msgs := (validate_action("create", resource_type, tfprotect_types_config[resource_type]) |
 	         validate_action("update", resource_type, tfprotect_types_config[resource_type]) |
 			 validate_action("delete", resource_type, tfprotect_types_config[resource_type]))
@@ -26,5 +29,5 @@ deny[msg] {
 
 deny[msg] {
 	not resource_types
-	msg := "No tfprotect config provided with 'types'"
+	msg := "No tfprotect config provided"
 }
